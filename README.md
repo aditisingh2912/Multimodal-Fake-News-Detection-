@@ -1,4 +1,4 @@
-#Multimodal-Fake-News-Detection
+# Multimodal-Fake-News-Detection
 This repositiory is built for identifying Fake News from different modality like the images and text 
 # Dataset
 You can access the dataset here which is used for training [here](https://github.com/stevejpapad/image-text-verification/tree/master/VERITE)
