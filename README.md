@@ -63,23 +63,23 @@ The logit is a probability (0.0 to 1.0) via a Sigmoid function.
 1. Prerequisites
    ```
      1.1 Python 3.9+
-     1.2 PyTorch (CUDA recommended for lower latency)
+     1.2 PyTorch
      1.3 A pre-trained best_model.pt in the checkpoints_pt/ folder.
 
-2. Installation
+ 2. Installation
    ```
       2.1 git clone https://github.com/aditisingh2912/Multimodal-Fake-News-Detection-.git
       2.2 cd Assignment
       2.3 pip install -r requirements.txt
    ```
 
-3.Run the backend
+ 3.Run the backend
 ```
       3.1 python backend.py
 ```
 Wait for the "Engine: Weights Loaded" message.
 
-4.Run frontend in a seperate terminal 
+ 4.Run frontend in a seperate terminal 
 ```
       4.1 streamlit run frontend.py
 ```
