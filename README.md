@@ -1,5 +1,7 @@
 # REDDOT: Multimodal Fake News Detection System
-### An Inference AI pipeline for identifying contextual inconsistencies between news images and captions
+REDDOT(aka Relevant-Evidence-Detection) is an opensource  transformer model known for Multimodal Fake News Detection task. Originally the model was trained on a multiple news sources to create a robust training pipeline . More information about how the model is trained can be found at [here](https://github.com/stevejpapad/relevant-evidence-detection).
+
+### An Inference AI pipeline for identifying misinformation between news images and captions
 
 #### Key Features
 
