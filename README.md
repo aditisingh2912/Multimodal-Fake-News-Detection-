@@ -70,18 +70,25 @@ The logit is a probability (0.0 to 1.0) via a Sigmoid function.
 ## Getting Started 
 
 1. Prerequisites
-Python 3.9+
-PyTorch (CUDA recommended for lower latency)
-A pre-trained best_model.pt in the checkpoints_pt/ folder.
+   ```
+      Python 3.9+
+      PyTorch (CUDA recommended for lower latency)
+      A pre-trained best_model.pt in the checkpoints_pt/ folder.
 
 2.Installation
-git clone https://github.com/your-username/reddot-detection.git
-cd reddot-detection
-pip install -r requirements.txt
+   ```
+      git clone https://github.com/your-username/reddot-detection.git
+      cd reddot-detection
+      pip install -r requirements.txt
+```
 
-3.Run the backend 
-python backend.py
+3.Run the backend
+```
+      python backend.py
+```
 Wait for the "Engine: Weights Loaded" message.
 
 4.Run frontend in a seperate terminal 
+```
 streamlit run frontend.py
+```
