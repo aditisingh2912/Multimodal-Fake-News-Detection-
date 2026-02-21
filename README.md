@@ -35,10 +35,14 @@ This is where raw data becomes Tensors.
 
 This is the most complex part of the flow where the REDDOT Architecture takes over.
 
-4.1 Concatenation (The Fusion): The model takes the CLS Token $[1, 1, 768]$, the Image $[1, 1, 768]$, and the Text $[1, 1, 768]$. It glues them together to create a sequence of $[1, 3, 768]$.
+4.1 Concatenation: The model takes the CLS Token $[1, 1, 768]$, the Image $[1, 1, 768]$, and the Text $[1, 1, 768]$. It glues them together to create a sequence of $[1, 3, 768]$.
+
 4.2 The Transformer Pass: This $[1, 3, 768]$ block passes through 4 layers of self-attention.
-4.3 Interaction: The CLS token "attends" to both features, looking for contradictions (e.g., An image of people in the market Vs The people fighting context )  
-4.4 The Extraction: After the final layer, the model throws away the Image and Text results and only keeps the first item: the updated CLS Token $[1, 768]$. 
+
+4.3 Interaction: The CLS token "attends" to both features, looking for contradictions 
+
+4.4 The Extraction: After the final layer, the model throws away the Image and Text results and only keeps the first item: the updated CLS Token $[1, 768]$.
+
 4.5 Classification: This single vector passes through the TokenClassifier (Linear layers + GELU). It outputs a single number.
 
 ### Stage 5: Metric calculation 
