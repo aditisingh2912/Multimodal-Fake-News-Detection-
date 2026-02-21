@@ -65,3 +65,22 @@ The logit is a probability (0.0 to 1.0) via a Sigmoid function.
 5.4 JSON Return: FastAPI packs these numbers into a JSON object and sends it back to Streamlit.
 
 5.5 Display: Streamlit receives the JSON and renders the green/red labels and the latency metric.
+
+## Getting Started 
+
+1. Prerequisites
+Python 3.9+
+PyTorch (CUDA recommended for lower latency)
+A pre-trained best_model.pt in the checkpoints_pt/ folder.
+
+2.Installation
+git clone https://github.com/your-username/reddot-detection.git
+cd reddot-detection
+pip install -r requirements.txt
+
+3.Run the backend 
+python backend.py
+Wait for the "Engine: Weights Loaded" message.
+
+4.Run frontend in a seperate terminal 
+streamlit run frontend.py
