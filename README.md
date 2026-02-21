@@ -1,6 +1,10 @@
 # REDDOT: Multimodal Fake News Detection System
 REDDOT(aka Relevant-Evidence-Detection) is an opensource  transformer model known for Multimodal Fake News Detection task. Originally the model was trained on a multiple news sources to create a robust training pipeline . More information about how the model is trained can be found at [here](https://github.com/stevejpapad/relevant-evidence-detection).
 
+This project is an attempt to create a production level inference pipeline incorporating major AI engineering principles and validation metrics like Entropy and confidence to predict Fake News Detection . 
+
+My aim for doing this project was to explore how AI systems are built in real world with relevant metrics to judge the performance of the model. My progression in the journey shows how just predicting Fake/Real for a particular instance is so superficial way of understanding real world AI systems. Various important metrics like confidence and entropy determine the efficency of full proof system. This project is for open ended discussion and any suggestions to improve the model performance is always welcome. 
+
 # Overview
 
 #### Key Features
