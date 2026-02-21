@@ -74,18 +74,27 @@ The logit is a probability (0.0 to 1.0) via a Sigmoid function.
 
  2. Installation
    ```
+      Clone the repository 
       2.1 git clone https://github.com/aditisingh2912/Multimodal-Fake-News-Detection-.git
-      2.2 cd Assignment
+      2.2 cd Multimodal-Fake-News-Detection-
       2.3 pip install -r requirements.txt
    ```
-
- 3.Run the backend
+ 3. Environment Setup
+    ```
+    Create a virtual environment
+          python -m venv venv
+          Activate it On Windows:
+          venv\Scripts\activate
+          On Mac/Linux:
+          source venv/bin/activate
+    ```
+ 4.Run the backend
 ```
       3.1 python backend.py
 ```
 Wait for the "Engine: Weights Loaded" message.
 
- 4.Run frontend in a seperate terminal 
+ 5.Run frontend in a seperate terminal 
 ```
       4.1 streamlit run frontend.py
 ```
