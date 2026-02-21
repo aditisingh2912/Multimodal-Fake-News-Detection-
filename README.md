@@ -1,7 +1,7 @@
 # REDDOT: Multimodal Fake News Detection System
-## An Inference AI pipeline for identifying contextual inconsistencies between news images and captions
+### An Inference AI pipeline for identifying contextual inconsistencies between news images and captions
 
-### Key Features
+#### Key Features
 
 1.Multimodal Fusion: Cross-references visual (CLIP) and textual features using a 4-layer Transformer Encoder.
 
