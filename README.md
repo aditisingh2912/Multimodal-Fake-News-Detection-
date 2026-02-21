@@ -13,7 +13,7 @@ REDDOT(aka Relevant-Evidence-Detection) is an opensource  transformer model know
 
 4.Scalable Design: Implements the Model Singleton Pattern to serve predictions in $<500$ms.
 
-## Arcitecture Design
+## Architecture Design
 ### Stage 1: The Ingestion Layer 
 1.1 The journey begins at the Frontend.    
 1.2 Binary Packing: When you upload image.jpg and type a caption, Streamlit packs them into a Multipart Form-Data request.   
