@@ -73,8 +73,9 @@ The logit is a probability (0.0 to 1.0) via a Sigmoid function.
      1.3 A pre-trained best_model.pt in the checkpoints_pt/ folder.
 
  2. Installation
+    ### Clone the repository 
    ```
-      Clone the repository 
+      
       2.1 git clone https://github.com/aditisingh2912/Multimodal-Fake-News-Detection-.git
       2.2 cd Multimodal-Fake-News-Detection-
       2.3 pip install -r requirements.txt
@@ -83,9 +84,9 @@ The logit is a probability (0.0 to 1.0) via a Sigmoid function.
     ```
     Create a virtual environment
           python -m venv venv
-          Activate it On Windows:
+    # Activate it On Windows:
           venv\Scripts\activate
-          On Mac/Linux:
+    # On Mac/Linux:
           source venv/bin/activate
     ```
  4.Run the backend
