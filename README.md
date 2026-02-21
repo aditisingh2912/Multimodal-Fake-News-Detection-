@@ -69,7 +69,7 @@ The logit is a probability (0.0 to 1.0) via a Sigmoid function.
 2. Installation
    ```
       2.1 git clone https://github.com/your-username/reddot-detection.git
-      2.2 cd reddot-detection
+      2.2 cd Assignment
       2.3 pip install -r requirements.txt
    ```
 
