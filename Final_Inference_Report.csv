@@ -1,0 +1,11 @@
+Sample_ID,Prediction,Ground_Truth,Confidence,Entropy
+sample1,TRUE,fake,0.678,0.9066
+sample10,TRUE,Fake,0.9977,0.0232
+sample2,TRUE,true,0.9999,0.0018
+sample3,FAKE,fake,0.633,0.9484
+sample4,TRUE,fake,1.0,0.0006
+sample5,TRUE,true,0.9999,0.0019
+sample6,TRUE,Fake,0.9748,0.1695
+sample7,TRUE,Fake,0.9908,0.0756
+sample8,FAKE,True,0.9709,0.1896
+sample9,TRUE,True,0.9891,0.0868
