@@ -4,8 +4,11 @@
 #### Key Features
 
 1.Multimodal Fusion: Cross-references visual (CLIP) and textual features using a 4-layer Transformer Encoder.
+
 2.Entropy calculation : Reports Shannon Entropy to flag when the model is "confused" by conflicting evidence
+
 3.Architecture: Decoupled FastAPI backend and Streamlit frontend for high-performance, low-latency inference.
+
 4.Scalable Design: Implements the Model Singleton Pattern to serve predictions in $<500$ms.
 
 ## Arcitecture Design
