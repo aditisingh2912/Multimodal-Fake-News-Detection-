@@ -54,10 +54,14 @@ This is the most complex part of the flow where the REDDOT Architecture takes ov
 
 The logit is a probability (0.0 to 1.0) via a Sigmoid function.
 
-5.1 Metrics: engine.get_metrics() calculates:Label: $Prob > 0.5$ ? "FAKE" : "TRUE"     
+5.1 Metrics: engine.get_metrics() calculates:Label: $Prob > 0.5$ ? "FAKE" : "TRUE"   
+
 5.2 Confidence: How far from 0.5 we are.  
+
 5.3 Entropy: The level of conflict between modalities.
+
 5.4 JSON Return: FastAPI packs these numbers into a JSON object and sends it back to Streamlit.
+
 5.5 Display: Streamlit receives the JSON and renders the green/red labels and the latency metric.
 
 ## Getting Started 
