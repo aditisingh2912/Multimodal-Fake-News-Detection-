@@ -34,6 +34,7 @@ This is where raw data becomes Tensors.
 3.1 CLIP Encoding: The processor.py uses the CLIP ViT-L/14 model
 
    3.1.1 Visual Branch: The image is resized to $224 \times 224$ pixels and converted into a $[1, 768]$ vector.
+   
    3.1.2 Textual Branch: The caption is tokenized and converted into a $[1, 768]$ vector.
    
 3.2 Output: You now have two 768-dimensional "summaries" of the data.
