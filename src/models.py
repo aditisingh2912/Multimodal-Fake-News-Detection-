@@ -38,7 +38,7 @@ class RED_DOT(nn.Module):
         skip_tokens=0,
         use_evidence=1,
         use_neg_evidence=1,
-        model_version="baseline",
+        model_version="guided",
         fuse_evidence=[False]
     ):
 

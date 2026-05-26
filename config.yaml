@@ -1,0 +1,12 @@
+# config.yaml
+metadata:
+  project_name: "RED-DOT Multimodal Security Gatekeeper"
+  version: "1.2.0"
+
+thresholds:
+  strict_fake_cutoff: 0.45
+  safe_real_cutoff: 0.75
+
+ux_settings:
+  enable_soft_flagging: true
+  allow_human_override_queue: true

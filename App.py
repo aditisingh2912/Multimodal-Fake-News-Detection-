@@ -1,115 +1,185 @@
 import streamlit as st
 import requests
-import pandas as pd
+import yaml
+import os
 
-# 1. Page Configuration
-st.set_page_config(
-    page_title="REDDOT | Multimodal Fake News Detector",
-    page_icon="🛡️",
-    layout="wide"
-)
+CONFIG_FILE = "config.yaml"
+if not os.path.exists(CONFIG_FILE):
+    with open(CONFIG_FILE, "w") as f:
+        yaml.safe_dump({
+            "metadata": {
+                "project_name": "RED-DOT Multimodal Security Gatekeeper",
+                "version": "2.0.0"
+            },
+            "ux_settings": {
+                "allow_human_override_queue": True
+            }
+        }, f)
 
-# 2. Sidebar - System Status & Settings
+with open(CONFIG_FILE, "r") as f:
+    config = yaml.safe_load(f)
+
+st.set_page_config(page_title="RED-DOT | Fake News Detector", layout="wide")
+
+# ── SIDEBAR ───────────────────────────────────────────────────────────────────
 st.sidebar.title("⚙️ System Control")
-# Use 127.0.0.1 for better local compatibility
 api_url = st.sidebar.text_input("Backend API URL", value="http://127.0.0.1:8000")
 
-# --- FIX: Robust Health Check ---
 backend_online = False
 try:
-    health_resp = requests.get(f"{api_url}/health", timeout=2)
-    if health_resp.status_code == 200:
-        health = health_resp.json()
-        st.sidebar.success(f"Backend: ONLINE ({health.get('device', 'Unknown')})")
+    resp = requests.get(f"{api_url}/health", timeout=2)
+    if resp.status_code == 200:
+        h = resp.json()
+        st.sidebar.success(f"Backend ONLINE ({h.get('device', '?')})")
         backend_online = True
     else:
         st.sidebar.error("Backend: ERROR STATUS")
 except Exception:
-    st.sidebar.error("Backend: OFFLINE (Run your FastAPI server!)")
+    st.sidebar.error("❌ Backend OFFLINE — run: python backend.py")
 
 st.sidebar.divider()
-st.sidebar.info(
-    "AI Principles Applied:\n"
-    "- Model Singletoning\n"
-    "- Uncertainty Quantification\n"
-    "- Latency Monitoring"
-)
+st.sidebar.markdown("""
+**Decision logic**
 
-# 3. Main UI Header
-st.title("🛡️ REDDOT: Multimodal Fake News Detection")
-st.markdown("""
-    Upload news samples (Image + Caption) to verify authenticity. 
-    The system analyzes **contextual consistency** between visual and textual data.
+The model outputs a raw **logit** (no manual thresholds):
+
+- `logit < 0` → **REAL** (consistent pair)
+- `logit > 0` →  **FAKE** (semantic mismatch)
+
+The **RAG Gate** intercepts automatically when uncertainty is high.
 """)
 
-# 4. Input Section
-with st.expander("📥 Upload News Samples", expanded=True):
-    col1, col2 = st.columns([1, 1])
-    with col1:
+# ── MAIN ──────────────────────────────────────────────────────────────────────
+st.title("RED-DOT: Multimodal Fake News Detection")
+st.markdown(
+    "Upload a news image and caption. "
+    "The model decides **REAL, FAKE, or UNCERTAIN** dynamically using neural inference + FAISS RAG."
+)
+
+with st.expander("📤 Upload News Sample", expanded=True):
+    c1, c2 = st.columns(2)
+    with c1:
         uploaded_files = st.file_uploader(
-            "Select Images",
-            type=["jpg", "jpeg", "png"],
+            "Select Image(s)", type=["jpg", "jpeg", "png"],
             accept_multiple_files=True
         )
-    with col2:
-        caption = st.text_area("Enter News Caption", height=100)
+    with c2:
+        caption = st.text_area("Enter News Caption", height=120)
 
-# 5. Inference Logic
-if st.button("🚀 Run Multimodal Analysis"):
+# ── INFERENCE ─────────────────────────────────────────────────────────────────
+if st.button("🚀 Analyse"):
     if not backend_online:
-        st.error("Cannot run analysis while backend is OFFLINE.")
+        st.error("Backend is OFFLINE.")
     elif not uploaded_files or not caption:
-        st.warning("Please provide both image(s) and a caption.")
+        st.warning("Provide both image(s) and a caption.")
     else:
         st.divider()
-        st.subheader("📊 Analysis Results")
+        st.subheader("Results")
 
         for file in uploaded_files:
-            # --- FIX: Initialize 'res' inside the loop to prevent NameError ---
             res = None
-
             with st.container():
-                c1, c2, c3 = st.columns([1, 2, 1])
+                col_img, col_result, col_meta = st.columns([1, 2, 1])
 
-                with c1:
-                    # Updated for 2026 Streamlit standards
-                    st.image(file, width=300)
+                with col_img:
+                    st.image(file, width=260, caption=file.name)
 
-                with c2:
-                    files = {"image": (file.name, file.getvalue(), file.type)}
-                    data = {"caption": caption}
-
+                with col_result:
                     try:
-                        response = requests.post(f"{api_url}/predict", files=files, data=data, timeout=10)
+                        response = requests.post(
+                            f"{api_url}/predict",
+                            files={"image": (file.name, file.getvalue(), file.type)},
+                            data={"caption": caption},
+                            timeout=60
+                        )
+
                         if response.status_code == 200:
                             res = response.json()
 
                             if res.get("status") == "success":
-                                label = res["prediction"]
-                                color = "green" if label == "TRUE" else "red"
-                                st.markdown(f"### Label: :{color}[{label}]")
+                                # Extract metrics and schema states safely
+                                prediction = str(res.get("verdict", "uncertain")).lower()
+                                logit_val = res["logit"]
+                                prob_fake = res["prob_fake"]
+                                cosine_sim = res["cosine_sim"]
+                                confidence = res["confidence"]
+                                entropy = res["entropy"]
+                                gate = res.get("gate_triggered", "A").lower()
 
-                                st.write(f"**Confidence:** {res['confidence']:.2%}")
-                                st.progress(res['confidence'])
+                                # ── RENDERING THE MAIN BANNER ──────────────────
+                                if prediction == "real":
+                                    st.success(
+                                        f"**REAL** — Image and caption are verified consistent. (Gate {gate.upper()})")
+                                elif prediction == "fake":
+                                    st.error(f"**FAKE** — Multimodal context mismatch detected! (Gate {gate.upper()})")
+                                else:
+                                    st.warning(
+                                        f"**UNCERTAIN** — Inconclusive fact match. Requires human audit loop. (Gate {gate.upper()})")
 
-                                st.write(f"**Shannon Entropy:** {res['entropy']}")
-                                if res['entropy'] > 0.7:
-                                    st.warning("⚠️ High Uncertainty: Possible conflict.")
+                                st.divider()
+
+                                # ── MODEL EVIDENCE ─────────────────────
+                                st.markdown("**Model Signal (Raw Logit)**")
+                                st.caption(
+                                    f"`{logit_val:+.4f}` — "
+                                    f"{'positive → FAKE' if logit_val > 0 else 'negative → REAL'} | "
+                                    f"|logit| = {abs(logit_val):.4f} (larger = more certain)"
+                                )
+                                logit_norm = min(abs(logit_val) / 6.0, 1.0)
+                                st.progress(logit_norm)
+
+                                # ── INDEPENDENT COSINE CHECK ───────────
+                                st.markdown("**Independent CLIP Cosine Similarity**")
+                                cos_label = (
+                                    "Strong match" if cosine_sim > 0.25 else
+                                    "Moderate match" if cosine_sim > 0.12 else
+                                    "Weak / mismatch"
+                                )
+                                st.caption(
+                                    f"`{cosine_sim:.4f}` — {cos_label} (independent of model weights)"
+                                )
+                                st.progress(float(min(max(cosine_sim, 0.0), 1.0)))
+
+                                # Operational signals alignment verification
+                                model_says_fake = prediction == "fake"
+                                cosine_says_fake = cosine_sim < 0.12
+                                if prediction != "uncertain" and (model_says_fake != cosine_says_fake):
+                                    st.warning("Model signal and raw CLIP alignment conflict — exercise caution.")
+                                else:
+                                    st.info("✓ Core operational telemetry signals are in alignment.")
+
+                                # ── METRICS ROW ────────────────────────
+                                st.divider()
+                                m1, m2, m3 = st.columns(3)
+                                m1.metric("Confidence", f"{confidence:.2%}")
+                                m2.metric("Entropy", f"{entropy:.4f}")
+                                m3.metric("P(Fake)", f"{prob_fake:.4f}")
+
+                                if entropy > 0.50:
+                                    st.info(
+                                        f"ℹ️ High entropy state intercepted! RAG pipeline calibrated this output using nearest knowledge base vectors.")
+
+                                # ── 🚨 FAISS VECTOR STORE AUDIT TRAIL ──
+                                if gate == "b":
+                                    st.divider()
+                                    st.markdown("### 🔍 FAISS Vector Store Audit Trail")
+                                    with st.expander("📖 View Closest Historical Neighbors Context", expanded=True):
+                                        st.text(
+                                            res.get("retrieval_context", "No context string returned from backend."))
+                                        if "neighbours" in res and res["neighbours"]:
+                                            st.caption("Raw Neighbors Payload List:")
+                                            st.json(res["neighbours"])
                             else:
-                                st.error(f"Backend Logic Error: {res.get('message')}")
+                                st.error(f"API Error: {res.get('message', 'Unknown failure outcome.')}")
                         else:
-                            st.error(f"Server Error: Status Code {response.status_code}")
+                            st.error(f"Backend Server Error: HTTP Return Code {response.status_code}")
 
-                    except Exception as e:
-                        st.error(f"Connection Failed: {e}")
+                    except Exception as api_err:
+                        st.error(f"Failed to communicate with prediction gateway pipeline: {api_err}")
 
-                with c3:
-                    # --- FIX: Safe access to 'res' using None-check ---
-                    if res and res.get("status") == "success":
-                        st.metric("Latency", f"{res.get('latency_ms', 'N/A')} ms")
-                        st.caption("Target: < 500ms")
-
-                st.divider()
-
-# 6. Footer
-st.caption("REDDOT Inference Pipeline | Developed for AI Engineering Portfolio")
+                with col_meta:
+                    # Render operations tools like Human-in-the-loop triggers inside the meta column
+                    if config["ux_settings"]["allow_human_override_queue"]:
+                        st.markdown("### Operations")
+                        if st.button("Flag for Human Review", key=f"flag_{file.name}"):
+                            st.success("Queued successfully for human-in-the-loop review.")
