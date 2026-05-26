@@ -1,3 +1,5 @@
+[streamlit-App-.webm](https://github.com/user-attachments/assets/3627651d-ad16-4465-8495-2c0efd1d1cc8)
+
 # REDDOT: Multimodal Fake News Detection System
 REDDOT(aka Relevant-Evidence-Detection) is an opensource  transformer model known for Multimodal Fake News Detection task. Originally the model was trained on a multiple news sources to create a robust training pipeline . More information about how the model is trained can be found at [here](https://github.com/stevejpapad/relevant-evidence-detection).
 
