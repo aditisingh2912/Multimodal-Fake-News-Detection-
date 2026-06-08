@@ -1,6 +1,4 @@
-"""
-inference.py — Batch runner using REDDOTRagEngine
-"""
+
 import pandas as pd
 from pathlib import Path
 from Orchestrator import REDDOTRagEngine
