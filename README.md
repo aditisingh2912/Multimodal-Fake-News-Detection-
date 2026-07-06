@@ -105,6 +105,3 @@ Wait for the "Engine: Weights Loaded" message.
 ```
       4.1 streamlit run frontend.py
 ```
-
-## Current Status
-Currently Working to improve latency . Currently my latency stands at 7747.86 ms which is huge and needs to be optimised to bring it within 500 ms. 
